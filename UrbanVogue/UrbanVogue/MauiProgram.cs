@@ -1,4 +1,6 @@
-﻿namespace UrbanVogue;
+﻿using UrbanVogue.Models.Core;
+
+namespace UrbanVogue;
 
 public static class MauiProgram
 {
@@ -10,13 +12,11 @@ public static class MauiProgram
 			.UseMauiCommunityToolkit()
 			.ConfigureFonts(fonts =>
 			{
-				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+				fonts.AddFont("Jost-Regular.ttf", "Jost");
 			});
 
+
 		builder.RegisterPages();
-
-
         
 
 		return builder.Build();
@@ -45,6 +45,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<AuthViewModel>();
         builder.Services.AddSingleton<AuthPage>();
 
+		builder.Services.AddSingleton<Core>();
 
         return builder;
 	}

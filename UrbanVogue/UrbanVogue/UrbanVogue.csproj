@@ -46,10 +46,25 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Fonts\Jost-Italic-VariableFont_wght.ttf" />
+	  <None Remove="Resources\Fonts\Jost-Regular.ttf" />
+	  <None Remove="Resources\Fonts\Jost-VariableFont_wght.ttf" />
+	  <None Remove="Resources\Images\productcart.svg" />
+	  <None Remove="Resources\Images\ratingstar.svg" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <PackageReference Include="CommunityToolkit.Maui" Version="5.3.0" />
 	  <PackageReference Include="CommunityToolkit.MVVM" Version="8.2.1" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	  <PackageReference Include="Polly" Version="8.0.0" />
 	  <PackageReference Include="SimpleToolkit.Core" Version="3.0.0" />
 	  <PackageReference Include="UraniumUI" Version="2.5.5" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Converters\" />
+	  <Folder Include="Models\Request\" />
 	</ItemGroup>
 
 	<PropertyGroup Label="MauiAppAccelerator">

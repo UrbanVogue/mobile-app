@@ -1,5 +1,4 @@
 ﻿global using CommunityToolkit.Maui;
-global using SkiaSharp.Views.Maui.Controls.Hosting;
 global using CommunityToolkit.Mvvm.ComponentModel;
 global using CommunityToolkit.Mvvm.Input;
 global using UrbanVogue.ViewModels;

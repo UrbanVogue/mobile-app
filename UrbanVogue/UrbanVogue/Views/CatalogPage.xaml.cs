@@ -2,9 +2,22 @@
 
 public partial class CatalogPage : ContentPage
 {
-	public CatalogPage(CatalogViewModel viewModel)
+    private CatalogViewModel _vm;
+
+    public CatalogPage(CatalogViewModel viewModel)
 	{
 		InitializeComponent();
 		BindingContext = viewModel;
+		_vm = viewModel;
 	}
+
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        await _vm.InitAsync();
+    }
+
+    private void ToolbarItem_Clicked(object sender, EventArgs e)
+    {
+
+    }
 }

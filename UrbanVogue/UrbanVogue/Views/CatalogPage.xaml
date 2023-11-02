@@ -2,7 +2,120 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:vm="clr-namespace:UrbanVogue.ViewModels"
+             xmlns:observablemodels="clr-namespace:UrbanVogue.Models.ObservableModels;assembly=UrbanVogue"
 			 x:Class="UrbanVogue.Views.CatalogPage"
-			 x:DataType="vm:CatalogViewModel">
+			 x:DataType="vm:CatalogViewModel"
+             Shell.ForegroundColor="Black"
+             Shell.TitleColor="Black">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="productcart.png" />
+    </ContentPage.ToolbarItems>
 
+
+    <Grid CompressedLayout.IsHeadless="True"
+          BackgroundColor="White"
+          RowDefinitions="0.05*,0.95*">
+        <Label Text="Усі товари"
+               FontSize="14"
+               FontAttributes="Bold"
+               HorizontalOptions="Start"
+               VerticalOptions="Center"
+               Margin="10,0,0,0"/>
+
+        <RefreshView Command="{Binding RefreshProductsCommand}"
+                     IsVisible="True"
+                     IsRefreshing="{Binding IsBusy}"
+                     Grid.RowSpan="2">
+
+            <CollectionView Grid.Row="2"
+                            ItemsSource="{Binding Products}"
+                            BackgroundColor="White">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="2" />
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="observablemodels:CatalogProduct">
+                        <Border BackgroundColor="#f7f7f7"
+                                HeightRequest="270"  
+                                StrokeThickness="0"
+                                Margin="6,6">
+                            <Border.StrokeShape>
+                                <RoundRectangle StrokeThickness="0" CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Grid CompressedLayout.IsHeadless="True"
+                                  Padding="0,10,0,10"
+                                  RowSpacing="5"
+                                  HorizontalOptions="Fill"
+                                  VerticalOptions="Fill">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="0.8*" />
+                                    <RowDefinition Height="0.1*" />
+                                    <RowDefinition Height="0.1*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.5*" />
+                                    <ColumnDefinition Width="0.5*" />
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Row="0"
+                                       HorizontalOptions="Center"
+                                       Grid.Column="0"
+                                       Grid.ColumnSpan="2"
+                                       Source="{Binding Image}"
+                                       Aspect="AspectFill" />
+
+                                <Label Grid.Row="1"                                      
+                                       Text="{Binding Name}"
+                                       FontSize="14"
+                                       Margin="20,5,0,0"
+                                       TextColor="Black"
+                                       HorizontalOptions="Start"
+                                       VerticalOptions="Center" />
+
+                                <HorizontalStackLayout Grid.Row="1"      
+                                                       Grid.Column="1"
+                                                       Margin="0,5,20,0"
+                                                       Spacing="5"
+                                                       HorizontalOptions="End"
+                                                       VerticalOptions="Center">
+                                    <Label Text="{Binding Rating}"
+                                           FontSize="14"                                           
+                                           TextColor="Black"/>
+                                    
+                                    <Image Source="ratingstar.png"
+                                           Aspect="AspectFit"
+                                           VerticalOptions="Center"
+                                           WidthRequest="15"
+                                           HeightRequest="15"/>
+
+                                </HorizontalStackLayout>
+
+
+                                <Label Grid.Row="2"
+                                       Grid.Column="0"
+                                       Grid.ColumnSpan="2"
+                                       Text="{Binding BasePrice, StringFormat='{0} UAH'}"
+                                       FontSize="14"
+                                       Margin="20,0,0,0"
+                                       TextColor="Black"
+                                       HorizontalTextAlignment="Start"
+                                       HorizontalOptions="Start"
+                                       VerticalOptions="Center" />
+
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <!--<ActivityIndicator IsRunning="{Binding IsBusy}"
+                           WidthRequest="150"
+                           HeightRequest="150"
+                           Grid.RowSpan="2"
+                           IsVisible="True"
+                           Color="{x:StaticResource Secondary}">
+
+        </ActivityIndicator>-->
+    </Grid>
 </ContentPage>
