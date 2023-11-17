@@ -37,11 +37,45 @@ namespace UrbanVogue.Models.Core
                 });
             }
 
-
             return res;
         }
 
+        public async Task<List<CartProduct>> GetCartProducts()
+        {
+            var res = new List<CartProduct>();
 
+            var response = new List<CartProductResponse>
+            {
+                new CartProductResponse
+                {
+                    Name = "Кепка",
+                    BasePrice = 50000,
+                    Discount = 15,
+                    Count = 2,
+                },
+                new CartProductResponse
+                {
+                    Name = "Джинси",
+                    BasePrice = 230000,
+                    Discount = 0,
+                    Count = 1,
+                }
+
+            };
+
+            foreach (var item in response)
+            {
+                res.Add(new CartProduct
+                {
+                    Name = item.Name,
+                    BasePrice = item.BasePrice,
+                    Discount = item.Discount,
+                    Count = item.Count,
+                });
+            }
+
+            return res;
+        }
 
         public async Task<object> AuthenticateAsync(object body)
         {

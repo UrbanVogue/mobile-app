@@ -2,7 +2,97 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:vm="clr-namespace:UrbanVogue.ViewModels"
+             xmlns:observablemodels="clr-namespace:UrbanVogue.Models.ObservableModels;assembly=UrbanVogue"
 			 x:Class="UrbanVogue.Views.CartPage"
-			 x:DataType="vm:CartViewModel">
+			 x:DataType="vm:CartViewModel"
+             Shell.ForegroundColor="Black"
+             Shell.TitleColor="Black">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="productcart.png" />
+    </ContentPage.ToolbarItems>
 
+
+    <Grid CompressedLayout.IsHeadless="True"
+          BackgroundColor="White"
+          RowDefinitions="0.05*,0.95*">
+        <Label Text="Кошик"
+               FontSize="14"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               Margin="10,0,0,0"/>
+
+        <RefreshView Command="{Binding RefreshProductsCommand}"
+                     IsVisible="True"
+                     IsRefreshing="{Binding IsBusy}"
+                     Grid.RowSpan="2">
+
+            <CollectionView Grid.Row="2"
+                            ItemsSource="{Binding CartProducts}"
+                            BackgroundColor="White">                
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="observablemodels:CartProductOM">
+                        <Border BackgroundColor="#f7f7f7"
+                                HeightRequest="100"  
+                                StrokeThickness="1"
+                                Margin="2">
+                            <Border.StrokeShape>
+                                <RoundRectangle StrokeThickness="0" CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Grid CompressedLayout.IsHeadless="True"
+                                  Padding="0,10,0,10"
+                                  RowSpacing="5"
+                                  HorizontalOptions="Fill"
+                                  VerticalOptions="Fill">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.5*" />
+                                    <ColumnDefinition Width="0.05*" />
+                                    <ColumnDefinition Width="0.2*" />
+                                </Grid.ColumnDefinitions>
+                                <Label Text="{Binding Name}"
+                                       FontSize="14"
+                                       Margin="5,5,0,0"
+                                       TextColor="Black"
+                                       HorizontalOptions="Start"
+                                       VerticalOptions="Center" />
+
+                                <HorizontalStackLayout Grid.Column="1"
+                                                       Margin="0,5,5,0"
+                                                       Spacing="5"
+                                                       HorizontalOptions="End"
+                                                       VerticalOptions="Center">
+                                    <Button Text="-"
+                                            Margin="0,5,5,0"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CartViewModel}}, Path=DecrCount}"
+                                            CommandParameter="{Binding .}"/>
+                                    
+                                    <Label Text="{Binding Count}"
+                                           FontSize="14"                                           
+                                           TextColor="Black"
+                                           />
+                                    
+                                    <Button Text="+"
+                                            Margin="0,5,5,0"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CartViewModel}}, Path=IncCount}"
+                                            CommandParameter="{Binding .}"/>
+                                    
+                                </HorizontalStackLayout>
+
+
+                                <Label Grid.Column="0"
+                                       Text="{Binding TotalPrice, StringFormat='{0} UAH'}"
+                                       FontSize="14"
+                                       Margin="5,0,0,0"
+                                       TextColor="Black"
+                                       HorizontalTextAlignment="Center"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center" />
+                                
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
 </ContentPage>
