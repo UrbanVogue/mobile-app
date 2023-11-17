@@ -36,7 +36,6 @@
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -49,22 +48,45 @@
 	  <None Remove="Resources\Fonts\Jost-Italic-VariableFont_wght.ttf" />
 	  <None Remove="Resources\Fonts\Jost-Regular.ttf" />
 	  <None Remove="Resources\Fonts\Jost-VariableFont_wght.ttf" />
+	  <None Remove="Resources\Images\logo.svg" />
 	  <None Remove="Resources\Images\productcart.svg" />
 	  <None Remove="Resources\Images\ratingstar.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="CommunityToolkit.Maui" Version="5.3.0" />
+	  <PackageReference Include="CommunityToolkit.Maui" Version="6.1.0" />
 	  <PackageReference Include="CommunityToolkit.MVVM" Version="8.2.1" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	  <PackageReference Include="Polly" Version="8.0.0" />
 	  <PackageReference Include="SimpleToolkit.Core" Version="3.0.0" />
-	  <PackageReference Include="UraniumUI" Version="2.5.5" />
+	  <PackageReference Include="SimpleToolkit.SimpleShell" Version="3.0.1" />
+	  <PackageReference Include="UraniumUI" Version="2.5.6" />
+	  <PackageReference Include="UraniumUI.Material" Version="2.5.6" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Folder Include="Converters\" />
-	  <Folder Include="Models\Request\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Views\RegisterPage.xaml.cs">
+	    <DependentUpon>RegisterPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\LoginPage.xaml.cs">
+	    <DependentUpon>LoginPage.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Views\ProductPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\RegisterPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Pages\ProductPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 	<PropertyGroup Label="MauiAppAccelerator">

@@ -23,12 +23,13 @@ namespace UrbanVogue.Models.Core
         {
             var res = new List<CatalogProduct>();
 
-            var response = await RestApi.GetAsync<List<CatalogProductResponse>>(GetUri(EnumMethod.Catalogue), null, 10);
+            var response = await RestApi.GetAsync<List<CatalogProductResponse>>(GetUri(EnumMethod.Catalogue), null,null, 10);
 
             foreach (var item in response)
             {
                 res.Add(new CatalogProduct
                 {
+                    Id = item.Id,
                     Name = item.Name,
                     BasePrice = item.BasePrice,
                     Discount = item.DiscountPrice,
@@ -41,11 +42,54 @@ namespace UrbanVogue.Models.Core
             return res;
         }
 
-
-
-        public async Task<object> AuthenticateAsync(object body)
+        public async Task<DetailedProductResponse> GetProductDetailsAsync(int id)
         {
-            return Task.FromResult<object>(null);
+            var res = new DetailedProductResponse();
+
+            var response = await RestApi.GetAsync<DetailedProductResponse>(GetUri(EnumMethod.Catalogue), queryParams: "1", null, 10);
+
+            //foreach (var item in response.Images)
+            //{
+            //    res.Images.Add(new Image
+            //    {
+            //        Source = item.Data is not null ? $"data:image/png;base64,{Convert.ToBase64String(item.Data)}" : null
+            //    });
+            //}
+
+            return res;
+        }   
+
+
+
+        public async Task<object> AuthenticateAsync()
+        {
+            return await Task.FromResult<object>(null);
+        }
+
+        public async Task<bool> RegisterAsync(RegisterRequest registerRequest)
+        {
+
+            //GetResult<AuthenticateResponse>(GetUri(EnumMethod.Authenticate),
+            //    new AuthenticateBody {
+            //    Email = email,
+            //    Password = password
+            //}, null);
+
+            return true;
+
+        }
+
+        public async Task<bool> LoginAsync(LoginRequest loginRequest)
+        {
+
+            //GetResult<AuthenticateResponse>(GetUri(EnumMethod.Authenticate),
+            //    new AuthenticateBody {
+            //    Email = email,
+            //    Password = password
+            //}, null);
+
+            return true;
+
         }
 
         private async Task<TResult> GetResult<TResult>(Uri uri, object body, Header header, int attemptsLeft = 3, int seconds = AppSettings.StandardRequestTime) where TResult : BaseResponseResult
@@ -61,6 +105,8 @@ namespace UrbanVogue.Models.Core
             return await _asyncPolicy.ExecuteAsync(async () => await RestApi.PostAsync<TResult>(uri, body, header, seconds));
 
         }
+
+       
 
         public Uri GetUri(EnumMethod method)
         {

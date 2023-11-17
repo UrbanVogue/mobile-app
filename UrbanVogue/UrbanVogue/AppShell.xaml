@@ -6,17 +6,23 @@
 	xmlns:views="clr-namespace:UrbanVogue.Views"
 	xmlns:local="clr-namespace:UrbanVogue">
 
+    <Shell.FlyoutHeader>
+        <Image Source="logo.svg"
+               Aspect="AspectFit"
+               HeightRequest="150"
+               Margin="10"
+               />
+    </Shell.FlyoutHeader>
+
     <ShellContent
 		Shell.NavBarIsVisible="true"
 		Title="Catalog"
-		Icon="iconblank.png"
 		ContentTemplate="{DataTemplate views:CatalogPage}"
 		Route="CatalogPage" />    
     
 	<ShellContent
 		Shell.NavBarIsVisible="true"
 		Title="Main"
-		Icon="iconblank.png"
 		ContentTemplate="{DataTemplate views:MainPage}"
 		Route="MainPage" />	
     
@@ -33,26 +39,32 @@
 		Icon="iconblank.png"
 		ContentTemplate="{DataTemplate views:ProfilePage}"
 		Route="ProfilePage" />
-    
-	<ShellContent
-		Shell.NavBarIsVisible="true"
-		Title="Cart"
-		Icon="iconblank.png"
-		ContentTemplate="{DataTemplate views:CartPage}"
-		Route="CartPage" />
 
-	<ShellContent
+    <ShellContent
 		Shell.NavBarIsVisible="true"
-		Title="About"
-		Icon="iconblank.png"
-		ContentTemplate="{DataTemplate views:AboutPage}"
-		Route="AboutPage" />
-    
-	<ShellContent
+		Title="Login"
+		ContentTemplate="{DataTemplate views:LoginPage}"
+		Route="LoginPage" />
+
+    <!--<ShellContent
 		Shell.NavBarIsVisible="true"
-		Title="Auth"
-		Icon="iconblank.png"
+		Title="Authentication"
 		ContentTemplate="{DataTemplate views:AuthPage}"
-		Route="AuthPage" />
+		Route="AuthPage" />-->
+
+    <Shell.FlyoutFooter>
+        <Grid HorizontalOptions="Fill"
+              HeightRequest="150">            
+        <Button HeightRequest="50"
+                WidthRequest="250"
+                Margin="10"
+                Text="Logout"
+                Clicked="OnLogoutButtonClicked"
+                BorderColor="{x:StaticResource Secondary}"
+                BorderWidth="1"
+                CornerRadius="50"
+                TextColor="{x:StaticResource Secondary}" />
+        </Grid>
+    </Shell.FlyoutFooter>
     
 </Shell>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:UrbanVogue.ViewModels"
+             xmlns:controls="clr-namespace:UrbanVogue.Views.Controls"
+             x:Class="UrbanVogue.Views.ProductPage"
+             x:DataType="vm:ProductPageVM"
+             Title="ProductPage">
+
+    <Grid RowDefinitions="0.5*, 0.5*"
+          CompressedLayout.IsHeadless="True">
+
+        <CollectionView x:Name="imagesCollectionView"
+                        Grid.Row="1"
+                        ItemsSource="{Binding Product.Images}"
+                        Scrolled="ImagesCollectionViewScrolled">
+            <CollectionView.Header>
+                <BoxView Color="Transparent" WidthRequest="{OnPlatform 14, Android=4}"/>
+            </CollectionView.Header>
+
+            <CollectionView.Footer>
+                <BoxView Color="Transparent" WidthRequest="{OnPlatform 14, Android=4}"/>
+            </CollectionView.Footer>
+
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10"/>
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type x:String}">
+                    <Grid Padding="0" CompressedLayout.IsHeadless="True">
+                        <Border Margin="10">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="24"/>
+                            </Border.StrokeShape>
+                            <Image Source="{Binding .}"
+                                   Aspect="AspectFill"
+                                   
+                                   />
+                           
+                        </Border>                        
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <controls:CustomIndicatorView x:Name="indicatorView"
+                                      Grid.Row="2"
+                                      VerticalOptions="Center"
+                                      Count="3"
+                                      HeightRequest="5"
+                                      Margin="0,0,0,10"/>
+    </Grid>
+</ContentPage>

@@ -1,8 +1,8 @@
 ﻿namespace UrbanVogue.Views;
 
-public partial class AuthPage : ContentPage
+public partial class RegisterPage : ContentPage
 {
-	public AuthPage(AuthViewModel viewModel)
+	public RegisterPage(LoginViewModel viewModel)
 	{
 		InitializeComponent();
 		BindingContext = viewModel;

@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:vm="clr-namespace:UrbanVogue.ViewModels"
+             xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+			 x:Class="UrbanVogue.Views.RegisterPage"
+			 x:DataType="vm:RegisterViewModel"
+             Shell.NavBarIsVisible="False">
+    <Grid>
+        <VerticalStackLayout VerticalOptions="Center"
+                             Spacing="20"
+                             Margin="15,0,15,0" >
+
+            <Image Source="logo.svg"
+                   HorizontalOptions="Fill"
+                   Margin="0,0,0,30" />
+
+            <Label Text="Please register to continue"
+               HorizontalOptions="Center"
+               Margin="0,0,0,50"/>
+
+            <material:TextField Text="{Binding AuthenticationModel.Email}"
+                            Title="Email"
+                            AccentColor="Black"
+                            BorderColor="Black"
+                            TextColor="{x:StaticResource Secondary}" />
+
+            <material:TextField Text="{Binding AuthenticationModel.FirstName}"
+                Title="FirstName"
+                AccentColor="Black"
+                BorderColor="Black"
+                TextColor="{x:StaticResource Secondary}" />
+
+            <material:TextField Text="{Binding AuthenticationModel.LastName}"
+                Title="LastName"
+                AccentColor="Black"
+                BorderColor="Black"
+                TextColor="{x:StaticResource Secondary}" />
+
+
+            <material:TextField Text="{Binding AuthenticationModel.Password}"
+                            Title="Password"
+                            AccentColor="Black"
+                            BorderColor="Black"
+                            TextColor="{x:StaticResource Secondary}"
+                            IsPassword="True" />
+
+            <material:TextField Text="{Binding AuthenticationModel.ConfirmPassword}"
+                 Title="ConfirmPassword"
+                 AccentColor="Black"
+                 BorderColor="Black"
+                 TextColor="{x:StaticResource Secondary}"
+                 IsPassword="True" />
+
+            <Button Text="Register"
+                    CornerRadius="50"
+                    BackgroundColor="{x:StaticResource Secondary}"
+                    TextColor="White"
+                    WidthRequest="200"
+                    HeightRequest="50"
+                    Command="{Binding ApplyCommand}" />
+            
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>
