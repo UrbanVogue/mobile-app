@@ -5,5 +5,6 @@
         Authenticate,
         GetProducts,
         Catalogue,
+        Product,
     }
 }

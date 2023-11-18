@@ -1,4 +1,5 @@
-﻿using UrbanVogue.Models.Core;
+﻿using UraniumUI;
+using UrbanVogue.Models.Core;
 
 namespace UrbanVogue;
 
@@ -10,7 +11,9 @@ public static class MauiProgram
 		builder
 			.UseMauiApp<App>()
 			.UseMauiCommunityToolkit()
-			.ConfigureFonts(fonts =>
+			.UseUraniumUI()
+            .UseUraniumUIMaterial()
+            .ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("Jost-Regular.ttf", "Jost");
 			});
@@ -39,11 +42,14 @@ public static class MauiProgram
         builder.Services.AddSingleton<CartViewModel>();
         builder.Services.AddSingleton<CartPage>();
 
-        builder.Services.AddSingleton<AboutViewModel>();
-        builder.Services.AddSingleton<AboutPage>();
+        builder.Services.AddSingleton<LoginViewModel>();
+        builder.Services.AddSingleton<LoginPage>();
 
-        builder.Services.AddSingleton<AuthViewModel>();
-        builder.Services.AddSingleton<AuthPage>();
+		builder.Services.AddSingleton<RegisterViewModel>();
+		builder.Services.AddSingleton<RegisterPage>();
+
+		builder.Services.AddSingleton<ProductPageVM>();
+        builder.Services.AddSingleton<ProductPage>();
 
 		builder.Services.AddSingleton<Core>();
 

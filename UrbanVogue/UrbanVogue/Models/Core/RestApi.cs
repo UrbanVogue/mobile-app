@@ -42,6 +42,7 @@ namespace UrbanVogue.Models.Core
 
         public static async Task<TResult> GetAsync<TResult>(
             Uri uri,
+            string queryParams = null,
             Header header = null,
             int seconds = AppSettings.StandardRequestTime
             )
@@ -57,6 +58,11 @@ namespace UrbanVogue.Models.Core
                 {
                     client.DefaultRequestHeaders.Add(item.Key, item.Value);
                 }
+            }
+
+            if(queryParams is not null)
+            {
+                uri = new Uri($"{uri}?{queryParams}");
             }
 
             HttpResponseMessage message = await client.GetAsync(uri);

@@ -29,6 +29,15 @@ public partial class CatalogViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private async Task OpenProduct(CatalogProduct product)
+    {
+        await Shell.Current.GoToAsync("/ProductPage", new Dictionary<string, object>
+        {
+            { "id", 1 }
+        });
+    }
+
+    [RelayCommand]
     public async Task RefreshProducts()
     {
         try
