@@ -2,9 +2,22 @@
 
 public partial class CartPage : ContentPage
 {
-	public CartPage(CartViewModel viewModel)
+    private CartViewModel _vm;
+
+    public CartPage(CartViewModel viewModel)
 	{
 		InitializeComponent();
 		BindingContext = viewModel;
-	}
+        _vm = viewModel;
+    }
+
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        await _vm.InitAsync();
+    }
+
+    private void ToolbarItem_Clicked(object sender, EventArgs e)
+    {
+
+    }
 }
