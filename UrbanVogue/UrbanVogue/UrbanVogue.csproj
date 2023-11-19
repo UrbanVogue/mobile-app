@@ -48,7 +48,11 @@
 	  <None Remove="Resources\Fonts\Jost-Italic-VariableFont_wght.ttf" />
 	  <None Remove="Resources\Fonts\Jost-Regular.ttf" />
 	  <None Remove="Resources\Fonts\Jost-VariableFont_wght.ttf" />
+	  <None Remove="Resources\Images\cartwhite.svg" />
+	  <None Remove="Resources\Images\delete.svg" />
 	  <None Remove="Resources\Images\logo.svg" />
+	  <None Remove="Resources\Images\minus.svg" />
+	  <None Remove="Resources\Images\plus.svg" />
 	  <None Remove="Resources\Images\productcart.svg" />
 	  <None Remove="Resources\Images\ratingstar.svg" />
 	</ItemGroup>

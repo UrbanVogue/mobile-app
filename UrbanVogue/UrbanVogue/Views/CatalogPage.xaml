@@ -8,7 +8,7 @@
              Shell.ForegroundColor="Black"
              Shell.TitleColor="Black">
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="productcart.png" />
+        <ToolbarItem IconImageSource="productcart.png" Command="{Binding OpenCartCommand}" />
     </ContentPage.ToolbarItems>
 
 

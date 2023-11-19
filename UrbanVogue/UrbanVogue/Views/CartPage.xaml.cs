@@ -15,9 +15,4 @@ public partial class CartPage : ContentPage
     {
         await _vm.InitAsync();
     }
-
-    private void ToolbarItem_Clicked(object sender, EventArgs e)
-    {
-
-    }
 }

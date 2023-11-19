@@ -1,5 +1,6 @@
 ﻿using UrbanVogue.Models.Core;
 using UrbanVogue.Models.ObservableModels;
+using UrbanVogue.Models.Request;
 
 namespace UrbanVogue.ViewModels;
 
@@ -24,31 +25,33 @@ public partial class CartViewModel : BaseViewModel
 
     public override async Task InitAsync()
     {
-        await RefreshProducts();
+        await Refresh();
     }
 
     [RelayCommand]
-    public async Task RefreshProducts()
+    public async Task Refresh()
     {
         try
         {
             IsBusy = true;
-            var cartProducts = await _core.GetCartProducts();
 
-            CartProducts.Clear();
-            foreach (var product in cartProducts)
+            var cart = await _core.GetCartProductsAsync("test");
+            if (cart != null)
             {
-                CartProducts.Add(new CartProductOM
-                {
-                    Name = product.Name,
-                    BasePrice = product.BasePrice,
-                    Count = product.Count,
-                    Discount = product.Discount,
-                    TotalPrice = product.BasePrice * product.Count - product.Discount
-            });
-            }
+                CartProducts.Clear();
 
-            IsBusy = false;
+                foreach (var product in cart.Items)
+                {
+                    CartProducts.Add(new CartProductOM
+                    {
+                        Name = product.ProductName,
+                        BasePrice = product.Price,
+                        Count = product.Quantity,
+                        Discount = 0,
+                        TotalPrice = product.Price * product.Quantity - 0,
+                    });
+                }
+            }
         }
         catch (Exception ex)
         {
@@ -61,16 +64,52 @@ public partial class CartViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    public async Task IncCount(CartProductOM product)
+    private void IncCount(CartProductOM product)
     {
         product.Count++;
         product.TotalPrice = product.BasePrice * product.Count - product.Discount;
     }
 
+
     [RelayCommand]
-    public async Task DecrCount(CartProductOM product)
+    private void DecrCount(CartProductOM product)
     {
         product.Count--;
         product.TotalPrice = product.BasePrice * product.Count - product.Discount;
+    }
+
+    //[RelayCommand]
+    //private async Task OpenProduct(CartProductOM product)
+    //{
+    //    await Shell.Current.GoToAsync("/ProductPage", new Dictionary<string, object>
+    //    {
+    //        { "id", product.Id }
+    //    });
+    //}
+
+    [RelayCommand]
+    private async Task DeleteFromCart(CartProductOM product)
+    {
+        var cart = await _core.GetCartProductsAsync("test");
+
+        if (cart != null)
+        {
+            var item = cart.Items.FirstOrDefault(x => x.ProductName == product.Name);
+            if (item != null)
+            {
+                cart.Items.Remove(item);
+            }
+        }
+
+        var response = await _core.AddToCart(new CreateCartRequest
+        {
+            Username = "test", 
+            Items = cart.Items
+        });
+
+        if (response != null)
+        {
+            await Refresh();
+        }
     }
 }

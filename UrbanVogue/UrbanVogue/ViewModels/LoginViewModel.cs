@@ -12,7 +12,7 @@ public partial class LoginViewModel : BaseViewModel
     private bool _isLogin;
 
     [ObservableProperty]
-    private AuthenticationOM _authenticationModel;
+    private AuthenticationOM _authenticationModel = new AuthenticationOM();
 
     public LoginViewModel(Core core)
     {
@@ -33,18 +33,17 @@ public partial class LoginViewModel : BaseViewModel
     [RelayCommand]
     private async Task Apply()
     {
-        //bool res= await _core
-        //        .LoginAsync(new LoginRequest
-        //        {
-        //            Email = AuthenticationModel.Email,
-        //            Password = AuthenticationModel.Password
-        //        });      
+        bool res = await _core.LoginAsync(new LoginRequest
+        {
+            Email = AuthenticationModel.Email,
+            Password = AuthenticationModel.Password
+        });
 
-        //if (res)
-        //{
-        //    await Shell.Current.GoToAsync("//CatalogPage");
-        //}
+        if (res)
+        {
+            await Shell.Current.GoToAsync("//CatalogPage");
+        }
 
-        await Shell.Current.GoToAsync("//CatalogPage");
+        //await Shell.Current.GoToAsync("//CatalogPage");
     }
 }

@@ -33,9 +33,17 @@ public partial class CatalogViewModel : BaseViewModel
     {
         await Shell.Current.GoToAsync("/ProductPage", new Dictionary<string, object>
         {
-            { "id", 1 }
+            { "id", product.Id }
         });
     }
+
+    [RelayCommand]
+    private async Task OpenCart()
+    {
+        await Shell.Current.GoToAsync("/CartPage");
+    }
+
+
 
     [RelayCommand]
     public async Task RefreshProducts()

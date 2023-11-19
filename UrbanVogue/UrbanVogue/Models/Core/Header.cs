@@ -2,7 +2,7 @@
 
 namespace UrbanVogue.Models.Core
 {
-    public class Header
+    public class Header : IEnumerable
     {
         private readonly Dictionary<string, string> _dictionary;
 
@@ -53,5 +53,10 @@ namespace UrbanVogue.Models.Core
 
 
         public static implicit operator KeyValuePair<string, string>[](Header header) => header._dictionary.ToArray();
+
+        public static explicit operator Header(Dictionary<string, string> v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

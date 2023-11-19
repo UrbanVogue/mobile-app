@@ -6,9 +6,10 @@ public partial class AppShell : Shell
 	{
 		InitializeComponent();
 
-		Routing.RegisterRoute(nameof(RegisterPage), typeof(RegisterPage));
 		Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
+		Routing.RegisterRoute(nameof(RegisterPage), typeof(RegisterPage));
 		Routing.RegisterRoute(nameof(ProductPage), typeof(ProductPage));
+		Routing.RegisterRoute(nameof(CartPage), typeof(CartPage));
 	}
 
     private void OnLogoutButtonClicked(object sender, EventArgs e)

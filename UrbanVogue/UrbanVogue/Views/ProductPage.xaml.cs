@@ -13,7 +13,7 @@ public partial class ProductPage : ContentPage
 
     private void ImagesCollectionViewScrolled(object sender, ItemsViewScrolledEventArgs e)
     {
-        indicatorView.MoveTo(e.CenterItemIndex - 1);
+        //indicatorView.MoveTo(e.CenterItemIndex - 1);
     }
 
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)

@@ -16,7 +16,7 @@
 
             <Label Text="Please login to continue"
                HorizontalOptions="Center"
-               Margin="0,0,0,50"/>
+               Margin="0,0,0,30"/>
 
             <material:TextField Text="{Binding AuthenticationModel.Email}"
                             Title="Email"
@@ -32,19 +32,20 @@
                             IsPassword="True" />
 
             <Button Text="Login"
-                    CornerRadius="50"
-                    BackgroundColor="{x:StaticResource Secondary}"
+                    Margin="0,50,0,0"
+                    BackgroundColor="{x:StaticResource Secondary}"                    
                     TextColor="White"
-                    WidthRequest="200"
-                    HeightRequest="50"
+                    WidthRequest="300"
+                    HeightRequest="40"
                     Command="{Binding ApplyCommand}" />
 
             <Button Text="Register"
-                    CornerRadius="50"
-                    BackgroundColor="{x:StaticResource Secondary}"
-                    TextColor="White"
-                    WidthRequest="200"
-                    HeightRequest="50"
+                    BackgroundColor="{x:StaticResource Primary}"
+                    BorderColor="{x:StaticResource Secondary}"
+                    BorderWidth="1"                    
+                    TextColor="{x:StaticResource Secondary}"
+                    WidthRequest="300"
+                    HeightRequest="40"
                     Command="{Binding RegisterCommand}" />            
         </VerticalStackLayout>
     </Grid>

@@ -3,52 +3,74 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:UrbanVogue.ViewModels"
              xmlns:controls="clr-namespace:UrbanVogue.Views.Controls"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="UrbanVogue.Views.ProductPage"
              x:DataType="vm:ProductPageVM"
              Title="ProductPage">
+    <ContentPage.Behaviors>
+        <mct:StatusBarBehavior StatusBarColor="{x:StaticResource Primary}" StatusBarStyle="DarkContent"/>
+    </ContentPage.Behaviors>
 
-    <Grid RowDefinitions="0.5*, 0.5*"
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="productcart.png" Command="{Binding OpenCartCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="0.9*, 0.1*"
           CompressedLayout.IsHeadless="True">
+        <ScrollView Grid.Row="0">
+            <Grid RowDefinitions="0.6*,1,0.4*"
+                  RowSpacing="10"
+                  CompressedLayout.IsHeadless="True">
 
-        <CollectionView x:Name="imagesCollectionView"
-                        Grid.Row="1"
-                        ItemsSource="{Binding Product.Images}"
-                        Scrolled="ImagesCollectionViewScrolled">
-            <CollectionView.Header>
-                <BoxView Color="Transparent" WidthRequest="{OnPlatform 14, Android=4}"/>
-            </CollectionView.Header>
+                <CarouselView x:Name="imagesCollectionView"    
+                            ItemsSource="{Binding Product.Images}"
+                            Scrolled="ImagesCollectionViewScrolled">
 
-            <CollectionView.Footer>
-                <BoxView Color="Transparent" WidthRequest="{OnPlatform 14, Android=4}"/>
-            </CollectionView.Footer>
+                    <CarouselView.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type x:String}">
+                            <Grid Padding="0"
+                              CompressedLayout.IsHeadless="True"
+                              >
 
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10"/>
-            </CollectionView.ItemsLayout>
+                                <Image Source="{Binding .}"
+                                   Aspect="AspectFit" />
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="{x:Type x:String}">
-                    <Grid Padding="0" CompressedLayout.IsHeadless="True">
-                        <Border Margin="10">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="24"/>
-                            </Border.StrokeShape>
-                            <Image Source="{Binding .}"
-                                   Aspect="AspectFill"
-                                   
-                                   />
-                           
-                        </Border>                        
-                    </Grid>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                            </Grid>
+                        </DataTemplate>
+                    </CarouselView.ItemTemplate>
 
-        <controls:CustomIndicatorView x:Name="indicatorView"
-                                      Grid.Row="2"
-                                      VerticalOptions="Center"
-                                      Count="3"
-                                      HeightRequest="5"
-                                      Margin="0,0,0,10"/>
+                </CarouselView>
+                
+                <Label Grid.Row="1"
+                       HorizontalOptions="Fill"
+                       VerticalOptions="Fill"
+                       BackgroundColor="{x:StaticResource Secondary}"/>
+                
+                <Grid Grid.Row="2"
+                      Margin="10"
+                      ColumnDefinitions="0.5*,0.5*"
+                      CompressedLayout.IsHeadless="True">
+                    <Label Text="{Binding Product.Name}"
+                           FontSize="16"
+                           TextColor="{x:StaticResource Secondary}" />
+
+                    <Label Grid.Column="1"
+                           Text="{Binding Product.BasePrice, StringFormat='{0} UAH'}"
+                           FontSize="16"
+                           TextColor="{x:StaticResource Secondary}"
+                           HorizontalOptions="End"
+                           HorizontalTextAlignment="End" />
+
+                </Grid>
+            </Grid>
+        </ScrollView>
+
+        <Button Grid.Row="1"
+                Margin="10"
+                TextColor="White"
+                ImageSource="cartwhite.svg"
+                BackgroundColor="{x:StaticResource Secondary}"
+                Text="Add to Cart"
+                Command="{Binding AddToCartCommand}" />
     </Grid>
 </ContentPage>

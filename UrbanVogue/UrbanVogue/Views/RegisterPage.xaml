@@ -53,13 +53,12 @@
                  IsPassword="True" />
 
             <Button Text="Register"
-                    CornerRadius="50"
-                    BackgroundColor="{x:StaticResource Secondary}"
+                    BackgroundColor="{x:StaticResource Secondary}"                    
                     TextColor="White"
-                    WidthRequest="200"
-                    HeightRequest="50"
+                    WidthRequest="250"
+                    HeightRequest="40"
                     Command="{Binding ApplyCommand}" />
-            
+
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

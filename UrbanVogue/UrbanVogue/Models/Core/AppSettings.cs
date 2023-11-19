@@ -1,4 +1,7 @@
-﻿namespace UrbanVogue.Models.Core
+﻿using UrbanVogue.Models.Request;
+using UrbanVogue.Models.Response;
+
+namespace UrbanVogue.Models.Core
 {
     public class AppSettings
     {
@@ -11,6 +14,10 @@
         public int RequestRetry { get; set; } = 3;
 
         public const int StandardRequestTime = 12;
+
+        public LoginResponse AuthResponse { get; set; }
+
+        public ClaimsResponse ClaimsResponse { get; set; }
 
     }
 }

@@ -29,27 +29,15 @@ public partial class RegisterViewModel : BaseViewModel
     {
         bool res = false;
 
-        if (IsLogin)
-        {
-            res = await _core
-                .LoginAsync(new LoginRequest
-                {
-                    Email = AuthenticationModel.Email,
-                    Password = AuthenticationModel.Password
-                });
-        }
-        else
-        {
-            res = await _core
-               .RegisterAsync(new RegisterRequest
-               {
-                   Email = AuthenticationModel.Email,
-                   FirstName = AuthenticationModel.FirstName,
-                   LastName = AuthenticationModel.LastName,
-                   Password = AuthenticationModel.Password,
-                   ConfirmPassword = AuthenticationModel.ConfirmPassword
-               });
-        }
+        res = await _core
+           .RegisterAsync(new RegisterRequest
+           {
+               Email = AuthenticationModel.Email,
+               FirstName = AuthenticationModel.FirstName,
+               LastName = AuthenticationModel.LastName,
+               Password = AuthenticationModel.Password,
+               ConfirmPassword = AuthenticationModel.ConfirmPassword
+           });
 
         if (res)
         {

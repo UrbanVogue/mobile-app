@@ -10,20 +10,21 @@ namespace UrbanVogue.Models.Core
 {
     public class Core
     {
-        private readonly AppSettings _appSettings;
 
         private AsyncRetryPolicy _asyncPolicy;
 
+        public AppSettings AppSettings { get; set; }
+
         public Core()
         {
-            _appSettings = new AppSettings();
+            AppSettings = new AppSettings();
         }
 
         public async Task<List<CatalogProduct>> GetProducts()
         {
             var res = new List<CatalogProduct>();
 
-            var response = await RestApi.GetAsync<List<CatalogProductResponse>>(GetUri(EnumMethod.Catalogue), null,null, 10);
+            var response = await RestApi.GetAsync<List<CatalogProductResponse>>(GetUri(EnumMethod.Catalogue), null, null, 10);
 
             foreach (var item in response)
             {
@@ -34,7 +35,7 @@ namespace UrbanVogue.Models.Core
                     BasePrice = item.BasePrice,
                     Discount = item.DiscountPrice,
                     Rating = item.Rating,
-                    Image = item.Image.Data is not null ? $"data:image/png;base64,{Convert.ToBase64String(item.Image.Data)}" : null
+                    Image = item.Image.Data is not null ? $"data:image/png;base64,{item.Image.Data}" : null
                 });
             }
 
@@ -43,56 +44,49 @@ namespace UrbanVogue.Models.Core
 
         public async Task<DetailedProductResponse> GetProductDetailsAsync(int id)
         {
-            var res = new DetailedProductResponse();
-
-            var response = await RestApi.GetAsync<DetailedProductResponse>(GetUri(EnumMethod.Catalogue), queryParams: "1", null, 10);
-
-            //foreach (var item in response.Images)
-            //{
-            //    res.Images.Add(new Image
-            //    {
-            //        Source = item.Data is not null ? $"data:image/png;base64,{Convert.ToBase64String(item.Data)}" : null
-            //    });
-            //}
+            var res = await RestApi.GetAsync<DetailedProductResponse>(GetUri(EnumMethod.Catalogue), queryParams: id.ToString(), null, 10);
 
             return res;
-        } 
-  
-   public async Task<List<CartProduct>> GetCartProducts()
+        }
+
+        public async Task<CartResponse> GetCartProductsAsync(string username)
         {
-            var res = new List<CartProduct>();
+            var res = await RestApi.GetAsync<CartResponse>(new Uri($"http://172.21.224.1:7777/api/v1/basket"), username);
 
-            var response = new List<CartProductResponse>
-            {
-                new CartProductResponse
-                {
-                    Name = "Кепка",
-                    BasePrice = 50000,
-                    Discount = 15,
-                    Count = 2,
-                },
-                new CartProductResponse
-                {
-                    Name = "Джинси",
-                    BasePrice = 230000,
-                    Discount = 0,
-                    Count = 1,
-                }
+            //var response = new List<CartProductResponse>
+            //{
+            //    new CartProductResponse
+            //    {
+            //        Name = "Кепка",
+            //        BasePrice = 50000,
+            //        Discount = 15,
+            //        Count = 2,
+            //    },
+            //    new CartProductResponse
+            //    {
+            //        Name = "Джинси",
+            //        BasePrice = 230000,
+            //        Discount = 0,
+            //        Count = 1,
+            //    }
 
-            };
-
-            foreach (var item in response)
-            {
-                res.Add(new CartProduct
-                {
-                    Name = item.Name,
-                    BasePrice = item.BasePrice,
-                    Discount = item.Discount,
-                    Count = item.Count,
-                });
-            }
+            //};           
 
             return res;
+        }
+
+        public async Task<CartResponse> AddToCart(CreateCartRequest request)
+        {
+            try
+            {
+                var res = await RestApi.PostAsync<CartResponse>(new Uri("http://172.21.224.1:7777/api/v1/basket"), request);
+
+                return res;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
 
@@ -116,15 +110,56 @@ namespace UrbanVogue.Models.Core
 
         public async Task<bool> LoginAsync(LoginRequest loginRequest)
         {
+            try
+            {
+                var authResponse = await RestApi.PostAuthAsync<LoginResponse>(header: null, GetAuthBody(loginRequest));
 
-            //GetResult<AuthenticateResponse>(GetUri(EnumMethod.Authenticate),
-            //    new AuthenticateBody {
-            //    Email = email,
-            //    Password = password
-            //}, null);
+                if (authResponse != null)
+                {
+                    AppSettings.AuthResponse = authResponse;
 
-            return true;
+                    var claimsResponse = await RestApi.GetAsync<ClaimsResponse>(
+                        new Uri("http://172.21.224.1:8010/connect/userinfo"),
+                        null,
+                        GetAuthHeader());
 
+                    if (claimsResponse != null)
+                    {
+                        AppSettings.ClaimsResponse = claimsResponse;
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        private Header GetAuthHeader()
+        {
+            var header = new Header
+            {
+                { "Authorization", AppSettings.AuthResponse.TokenType + " " + AppSettings.AuthResponse.AccessToken }
+            };
+
+            return header;
+        }
+
+        private ContentBody GetAuthBody(LoginRequest loginRequest)
+        {
+            var body = new ContentBody
+            {
+                { "grant_type", "password" },
+                { "scope", "CatalogAPI.read CatalogAPI.write offline_access profile openid" },
+                { "client_id", "Maui-Client" },
+                { "client_secret", "ClientSecret1" },
+                { "username", loginRequest.Email },
+                { "password", loginRequest.Password }
+            };
+
+            return body;
         }
 
         private async Task<TResult> GetResult<TResult>(Uri uri, object body, Header header, int attemptsLeft = 3, int seconds = AppSettings.StandardRequestTime) where TResult : BaseResponseResult
@@ -141,7 +176,6 @@ namespace UrbanVogue.Models.Core
 
         }
 
-       
 
         public Uri GetUri(EnumMethod method)
         {
