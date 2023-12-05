@@ -18,29 +18,7 @@ namespace UrbanVogue.Models.Core
         public Core()
         {
             AppSettings = new AppSettings();
-        }
-
-        //public static List<CartProduct> response = new List<CartProduct>
-        //    {
-        //        new CartProduct
-        //        {
-        //            ProductId = 1,
-        //            ProductName = "Кепка",
-        //            Price = 50000,
-        //            Color = "Black",
-        //            Size = "Large",
-        //            Quantity = 2
-        //        },
-        //        new CartProduct
-        //        {
-        //            ProductId = 2,
-        //            ProductName = "Джинси",
-        //            Price = 230000,
-        //            Color = "Black",
-        //            Size = "Small",
-        //            Quantity = 1
-        //        }
-        //    };
+        }        
 
         public async Task<List<CatalogProduct>> GetProducts()
         {
@@ -73,30 +51,42 @@ namespace UrbanVogue.Models.Core
 
         public async Task<CartResponse> GetCartProductsAsync(string username)
         {
-            var res = await RestApi.GetAsync<CartResponse>(new Uri($"http://172.21.224.1:7777/api/v1/basket"), username);
+            try
+            {
+                var res = await RestApi.GetAsync<CartResponse>(new Uri($"http://192.168.0.108:7777/api/v1/basket"), username);
+                return res;
 
-            //var res = new CartResponse
-            //{
-            //    Id = 1,
-            //    Username = "Pena",
-            //    Items = response,
-            //    TotalPrice = 330000,
-            //};
-
-            return res;
+            } catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public async Task<CartResponse> AddToCart(CreateCartRequest request)
         {
             try
             {
-                var res = await RestApi.PostAsync<CartResponse>(new Uri("http://172.21.224.1:7777/api/v1/basket"), request);
+                var res = await RestApi.PostAsync<CartResponse>(new Uri("http://192.168.0.108:7777/api/v1/basket"), request);
 
                 return res;
             }
             catch (Exception ex)
             {
                 return null;
+            }
+        }
+
+        public async Task<bool> CheckoutOrder(string username)
+        {
+            try
+            {
+                var res = await RestApi.PostQueryAsync<CartResponse>(new Uri("http://192.168.0.108:7777/api/v1/basket/checkout"), username);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
 
