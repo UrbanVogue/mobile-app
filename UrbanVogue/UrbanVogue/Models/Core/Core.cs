@@ -56,7 +56,8 @@ namespace UrbanVogue.Models.Core
                 var res = await RestApi.GetAsync<CartResponse>(new Uri($"http://192.168.0.108:7777/api/v1/basket"), username);
                 return res;
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return null;
             }
@@ -128,6 +129,22 @@ namespace UrbanVogue.Models.Core
                         AppSettings.ClaimsResponse = claimsResponse;
                     }
                 }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool Logout()
+        {
+            try
+            {
+                AppSettings.AuthResponse = null;
+                AppSettings.ClaimsResponse = null;
+                AppSettings.Token = null;
 
                 return true;
             }

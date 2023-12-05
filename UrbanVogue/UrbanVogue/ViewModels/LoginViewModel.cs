@@ -21,7 +21,16 @@ public partial class LoginViewModel : BaseViewModel
 
     public override Task InitAsync()
     {
-        return Task.CompletedTask;
+        try
+        {
+            AuthenticationModel = new AuthenticationOM();
+
+            return Task.CompletedTask;
+        }
+        catch
+        {
+            return Task.CompletedTask;
+        }
     }
 
     [RelayCommand]

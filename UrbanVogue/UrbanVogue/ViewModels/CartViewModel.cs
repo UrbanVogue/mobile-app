@@ -26,7 +26,21 @@ public partial class CartViewModel : BaseViewModel
 
     public override async Task InitAsync()
     {
-        await Refresh();
+        try
+        {
+
+
+            if (_core.AppSettings.AuthResponse is null)
+            {
+                await Shell.Current.GoToAsync("//LoginPage");
+                return;
+            }
+            await Refresh();
+        }
+        catch (Exception ex)
+        {
+            await App.Current.MainPage.DisplayAlert("Error", ex.Message, "Ok");
+        }
     }
 
     //public static DetailedProductResponse detail = new DetailedProductResponse
@@ -67,6 +81,7 @@ public partial class CartViewModel : BaseViewModel
         try
         {
             IsBusy = true;
+            CartProducts.Clear();
 
             var cart = await _core.GetCartProductsAsync("test");
             if (cart != null)

@@ -66,6 +66,12 @@ namespace UrbanVogue.ViewModels
         {
             try
             {
+                if (_core.AppSettings.AuthResponse is null)
+                {
+                    await Shell.Current.GoToAsync("//LoginPage");
+                    return;
+                }
+
                 var cart = await _core.GetCartProductsAsync("test");
 
                 CartResponse response = null;
