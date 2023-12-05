@@ -1,6 +1,7 @@
 ﻿using UrbanVogue.Models.Core;
 using UrbanVogue.Models.ObservableModels;
 using UrbanVogue.Models.Request;
+using UrbanVogue.Models.Response;
 
 namespace UrbanVogue.ViewModels;
 
@@ -28,6 +29,38 @@ public partial class CartViewModel : BaseViewModel
         await Refresh();
     }
 
+    //public static DetailedProductResponse detail = new DetailedProductResponse
+    //{
+    //    Id = 1,
+    //    Name = "Test",
+    //    BasePrice = 10000,
+    //    DiscountPrice = 0,
+    //    Rating = 10,
+    //    Description = "",
+    //    Images = new List<ImageResponse>(),
+    //    ProductItems = new List<ProductItem>
+    //    {
+    //        new ProductItem
+    //        {
+    //            Id = 1,
+    //            Size = "Large",
+    //            Color = "Black"
+    //        },
+    //        new ProductItem
+    //        {
+    //            Id = 2,
+    //            Size = "Large",
+    //            Color = "White"
+    //        },
+    //        new ProductItem
+    //        {
+    //            Id = 3,
+    //            Size = "Small",
+    //            Color = "Black"
+    //        }
+    //    }
+    //};
+
     [RelayCommand]
     public async Task Refresh()
     {
@@ -39,9 +72,13 @@ public partial class CartViewModel : BaseViewModel
             if (cart != null)
             {
                 CartProducts.Clear();
-
                 foreach (var product in cart.Items)
                 {
+                    var detail = await _core.GetProductDetailsAsync(product.ProductId);
+
+                    var sizes = detail.ProductItems.Select(x => x.Size).Distinct().ToList();
+                    var colors = detail.ProductItems.Where(x => x.Size == product.Size).Select(x => x.Color).Distinct().ToList();
+
                     CartProducts.Add(new CartProductOM
                     {
                         Name = product.ProductName,
@@ -49,6 +86,10 @@ public partial class CartViewModel : BaseViewModel
                         Count = product.Quantity,
                         Discount = 0,
                         TotalPrice = product.Price * product.Quantity - 0,
+                        Color = product.Color,
+                        Size = product.Size,
+                        Colors = colors,
+                        Sizes = sizes
                     });
                 }
             }
@@ -64,18 +105,59 @@ public partial class CartViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private void IncCount(CartProductOM product)
+    private async void IncCount(CartProductOM product)
     {
-        product.Count++;
-        product.TotalPrice = product.BasePrice * product.Count - product.Discount;
+        var cart = await _core.GetCartProductsAsync("test");
+
+        if (cart != null)
+        {
+            var item = cart.Items.FirstOrDefault(x => x.ProductName == product.Name);
+            if (item != null)
+            {
+                item.Quantity++;
+                item.Price += item.Price / (item.Quantity - 1);
+                cart.TotalPrice += item.Price / (item.Quantity + 1);
+            }
+        }
+
+        var response = await _core.AddToCart(new CreateCartRequest
+        {
+            Username = "test",
+            Items = cart.Items
+        });
+
+        if (response != null)
+        {
+            await Refresh();
+        }
     }
 
-
     [RelayCommand]
-    private void DecrCount(CartProductOM product)
+    private async void DecrCount(CartProductOM product)
     {
-        product.Count--;
-        product.TotalPrice = product.BasePrice * product.Count - product.Discount;
+        var cart = await _core.GetCartProductsAsync("test");
+
+        if (cart != null)
+        {
+            var item = cart.Items.FirstOrDefault(x => x.ProductName == product.Name);
+            if (item != null)
+            {
+                item.Quantity--;
+                item.Price -= item.Price / (item.Quantity + 1);
+                cart.TotalPrice -= item.Price / (item.Quantity + 1);
+            }
+        }
+
+        var response = await _core.AddToCart(new CreateCartRequest
+        {
+            Username = "test",
+            Items = cart.Items
+        });
+
+        if (response != null)
+        {
+            await Refresh();
+        }
     }
 
     //[RelayCommand]
@@ -112,4 +194,79 @@ public partial class CartViewModel : BaseViewModel
             await Refresh();
         }
     }
+
+    [RelayCommand]
+    private async Task ClearCart()
+    {
+        var cart = await _core.GetCartProductsAsync("test");
+
+        if (cart != null)
+        {
+            cart.Items.Clear();
+        }
+
+        var response = await _core.AddToCart(new CreateCartRequest
+        {
+            Username = "test",
+            Items = cart.Items
+        });
+
+        if (response != null)
+        {
+            await Refresh();
+        }
+    }
+
+    [RelayCommand]
+    public async void ChangeSize(CartProductOM product)
+    {
+        var cart = await _core.GetCartProductsAsync("test");
+
+        if (cart != null)
+        {
+            var item = cart.Items.FirstOrDefault(x => x.ProductName == product.Name);
+            if (item != null)
+            {
+                item.Size = product.Size;
+            }
+        }
+
+        //var response = await _core.AddToCart(new CreateCartRequest
+        //{
+        //    Username = "test",
+        //    Items = cart.Items
+        //});
+
+        if (true)
+        {
+            await Refresh();
+        }
+    }
+
+    [RelayCommand]
+    public async void ChangeColor(CartProductOM product)
+    {
+        var cart = await _core.GetCartProductsAsync("test");
+
+        if (cart != null)
+        {
+            var item = cart.Items.FirstOrDefault(x => x.ProductName == product.Name);
+            if (item != null)
+            {
+                item.Color = product.Color;
+            }
+        }
+
+        //var response = await _core.AddToCart(new CreateCartRequest
+        //{
+        //    Username = "test",
+        //    Items = cart.Items
+        //});
+
+        if (true)
+        {
+            await Refresh();
+        }
+    }
+
 }

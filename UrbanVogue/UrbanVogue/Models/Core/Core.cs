@@ -20,6 +20,28 @@ namespace UrbanVogue.Models.Core
             AppSettings = new AppSettings();
         }
 
+        //public static List<CartProduct> response = new List<CartProduct>
+        //    {
+        //        new CartProduct
+        //        {
+        //            ProductId = 1,
+        //            ProductName = "Кепка",
+        //            Price = 50000,
+        //            Color = "Black",
+        //            Size = "Large",
+        //            Quantity = 2
+        //        },
+        //        new CartProduct
+        //        {
+        //            ProductId = 2,
+        //            ProductName = "Джинси",
+        //            Price = 230000,
+        //            Color = "Black",
+        //            Size = "Small",
+        //            Quantity = 1
+        //        }
+        //    };
+
         public async Task<List<CatalogProduct>> GetProducts()
         {
             var res = new List<CatalogProduct>();
@@ -53,24 +75,13 @@ namespace UrbanVogue.Models.Core
         {
             var res = await RestApi.GetAsync<CartResponse>(new Uri($"http://172.21.224.1:7777/api/v1/basket"), username);
 
-            //var response = new List<CartProductResponse>
+            //var res = new CartResponse
             //{
-            //    new CartProductResponse
-            //    {
-            //        Name = "Кепка",
-            //        BasePrice = 50000,
-            //        Discount = 15,
-            //        Count = 2,
-            //    },
-            //    new CartProductResponse
-            //    {
-            //        Name = "Джинси",
-            //        BasePrice = 230000,
-            //        Discount = 0,
-            //        Count = 1,
-            //    }
-
-            //};           
+            //    Id = 1,
+            //    Username = "Pena",
+            //    Items = response,
+            //    TotalPrice = 330000,
+            //};
 
             return res;
         }
@@ -88,7 +99,6 @@ namespace UrbanVogue.Models.Core
                 return null;
             }
         }
-
 
         public async Task<object> AuthenticateAsync()
         {
@@ -176,14 +186,12 @@ namespace UrbanVogue.Models.Core
 
         }
 
-
         public Uri GetUri(EnumMethod method)
         {
             string path = Path.Combine(AppSettings.API_URI, CommandToName(method));
             var uri = new Uri(path);
             return uri;
         }
-
 
         public static string CommandToName(EnumMethod method) => method switch
         {

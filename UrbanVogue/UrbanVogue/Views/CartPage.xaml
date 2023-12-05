@@ -54,12 +54,27 @@
                                        TextColor="Black"
                                        HorizontalOptions="Start"
                                        VerticalOptions="Center" />
-                                
+
                                 <HorizontalStackLayout Grid.Column="1"
                                                        Spacing="5"
                                                        HorizontalOptions="End"
                                                        VerticalOptions="Center">
-                                    <ImageButton Source="minus.svg"
+                                    <Picker x:Name="sizePicker"
+                                            Title="{Binding Size}"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center"
+                                            ItemsSource="{Binding Sizes}"
+                                            SelectedItem="{Binding Size, Mode=TwoWay}"/>
+                                    
+                                    <Picker x:Name="colorPicker"
+                                            Title="{Binding Color}"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center"
+                                            ItemsSource="{Binding Colors}"
+                                            SelectedItem="{Binding Color, Mode=TwoWay}"/>
+                                    
+                                    <ImageButton Source=
+                                                 "minus.svg"
                                                  WidthRequest="15"
                                                  HeightRequest="15"    
                                                  BorderColor="Black"
@@ -69,6 +84,7 @@
                                                  Command="{Binding Source={RelativeSource
                                                            AncestorType={x:Type vm:CartViewModel}}, Path=DecrCountCommand}"
                                                  CommandParameter="{Binding .}"/>
+
                                     <Label Text="{Binding Count, Mode=TwoWay}"
                                            FontSize="16"                                           
                                            TextColor="Black"
@@ -106,5 +122,16 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </RefreshView>
+        <StackLayout Grid.Row="1"
+                 Orientation="Horizontal"
+                 HorizontalOptions="CenterAndExpand"
+                 VerticalOptions="EndAndExpand"
+                 Padding="10,5,10,20">
+            <Button Text="Очистити корзину"
+                    BackgroundColor="#ddd"
+                    TextColor="Black"
+                    BorderColor="Black"
+                    Command="{Binding ClearCartCommand}" />
+        </StackLayout>
     </Grid>
 </ContentPage>
