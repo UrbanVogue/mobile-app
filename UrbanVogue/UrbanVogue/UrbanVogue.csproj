@@ -48,6 +48,7 @@
 	  <None Remove="Resources\Fonts\Jost-Italic-VariableFont_wght.ttf" />
 	  <None Remove="Resources\Fonts\Jost-Regular.ttf" />
 	  <None Remove="Resources\Fonts\Jost-VariableFont_wght.ttf" />
+	  <None Remove="Resources\Images\bin.svg" />
 	  <None Remove="Resources\Images\cartwhite.svg" />
 	  <None Remove="Resources\Images\delete.svg" />
 	  <None Remove="Resources\Images\logo.svg" />

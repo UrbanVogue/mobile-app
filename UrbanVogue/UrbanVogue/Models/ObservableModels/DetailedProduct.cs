@@ -9,5 +9,15 @@
         public float Rating { get; set; }
         public List<string> Images { get; set; }
 
+        public List<ProductItem> ProductItems { get; set; }
+
+    }
+
+    public class ProductItem
+    {
+        public int Id { get; set; }
+        public string Size { get; set; }
+        public string Color { get; set; }
+
     }
 }

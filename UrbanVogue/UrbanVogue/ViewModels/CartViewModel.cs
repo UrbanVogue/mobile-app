@@ -26,7 +26,21 @@ public partial class CartViewModel : BaseViewModel
 
     public override async Task InitAsync()
     {
-        await Refresh();
+        try
+        {
+
+
+            if (_core.AppSettings.AuthResponse is null)
+            {
+                await Shell.Current.GoToAsync("//LoginPage");
+                return;
+            }
+            await Refresh();
+        }
+        catch (Exception ex)
+        {
+            await App.Current.MainPage.DisplayAlert("Error", ex.Message, "Ok");
+        }
     }
 
     //public static DetailedProductResponse detail = new DetailedProductResponse
@@ -67,6 +81,7 @@ public partial class CartViewModel : BaseViewModel
         try
         {
             IsBusy = true;
+            CartProducts.Clear();
 
             var cart = await _core.GetCartProductsAsync("test");
             if (cart != null)
@@ -74,22 +89,15 @@ public partial class CartViewModel : BaseViewModel
                 CartProducts.Clear();
                 foreach (var product in cart.Items)
                 {
-                    var detail = await _core.GetProductDetailsAsync(product.ProductId);
-
-                    var sizes = detail.ProductItems.Select(x => x.Size).Distinct().ToList();
-                    var colors = detail.ProductItems.Where(x => x.Size == product.Size).Select(x => x.Color).Distinct().ToList();
-
                     CartProducts.Add(new CartProductOM
                     {
                         Name = product.ProductName,
                         BasePrice = product.Price,
                         Count = product.Quantity,
                         Discount = 0,
-                        TotalPrice = product.Price * product.Quantity - 0,
+                        TotalPrice = product.Price * product.Quantity,
                         Color = product.Color,
                         Size = product.Size,
-                        Colors = colors,
-                        Sizes = sizes
                     });
                 }
             }
@@ -185,7 +193,7 @@ public partial class CartViewModel : BaseViewModel
 
         var response = await _core.AddToCart(new CreateCartRequest
         {
-            Username = "test", 
+            Username = "test",
             Items = cart.Items
         });
 
@@ -195,25 +203,53 @@ public partial class CartViewModel : BaseViewModel
         }
     }
 
+
+    [RelayCommand]
+    private async Task CheckoutOrder()
+    {
+        try
+        {
+            var response = await _core.CheckoutOrder("test");
+
+            if (response)
+            {
+                await Refresh();
+                await Shell.Current.GoToAsync("/OrderPage");
+            }
+        }
+        catch (Exception ex)
+        {
+            await App.Current.MainPage.DisplayAlert("Error", ex.Message, "Ok");
+        }
+    }
+
+
     [RelayCommand]
     private async Task ClearCart()
     {
-        var cart = await _core.GetCartProductsAsync("test");
-
-        if (cart != null)
+        try
         {
-            cart.Items.Clear();
+            var cart = await _core.GetCartProductsAsync("test");
+
+            if (cart != null)
+            {
+                cart.Items.Clear();
+            }
+
+            var response = await _core.AddToCart(new CreateCartRequest
+            {
+                Username = "test",
+                Items = cart.Items
+            });
+
+            if (response != null)
+            {
+                await Refresh();
+            }
         }
-
-        var response = await _core.AddToCart(new CreateCartRequest
+        catch (Exception ex)
         {
-            Username = "test",
-            Items = cart.Items
-        });
-
-        if (response != null)
-        {
-            await Refresh();
+            await App.Current.MainPage.DisplayAlert("Error", ex.Message, "Ok");
         }
     }
 
