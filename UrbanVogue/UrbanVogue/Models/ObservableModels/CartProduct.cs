@@ -13,7 +13,9 @@ namespace UrbanVogue.Models.ObservableModels
         [JsonProperty("price")]
         public decimal Price { get; set; }
         [JsonProperty("color")]
-        public string Color { get; set; }       
-        
+        public string Color { get; set; }
+        [JsonProperty("size")]
+        public string Size { get; set; }
+
     }
 }

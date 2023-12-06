@@ -1,6 +1,7 @@
 ﻿using UrbanVogue.Models.Core;
 using UrbanVogue.Models.ObservableModels;
 using UrbanVogue.Models.Request;
+using UrbanVogue.Models.Response;
 
 namespace UrbanVogue.ViewModels;
 
@@ -25,8 +26,54 @@ public partial class CartViewModel : BaseViewModel
 
     public override async Task InitAsync()
     {
-        await Refresh();
+        try
+        {
+
+
+            if (_core.AppSettings.AuthResponse is null)
+            {
+                await Shell.Current.GoToAsync("//LoginPage");
+                return;
+            }
+            await Refresh();
+        }
+        catch (Exception ex)
+        {
+            await App.Current.MainPage.DisplayAlert("Error", ex.Message, "Ok");
+        }
     }
+
+    //public static DetailedProductResponse detail = new DetailedProductResponse
+    //{
+    //    Id = 1,
+    //    Name = "Test",
+    //    BasePrice = 10000,
+    //    DiscountPrice = 0,
+    //    Rating = 10,
+    //    Description = "",
+    //    Images = new List<ImageResponse>(),
+    //    ProductItems = new List<ProductItem>
+    //    {
+    //        new ProductItem
+    //        {
+    //            Id = 1,
+    //            Size = "Large",
+    //            Color = "Black"
+    //        },
+    //        new ProductItem
+    //        {
+    //            Id = 2,
+    //            Size = "Large",
+    //            Color = "White"
+    //        },
+    //        new ProductItem
+    //        {
+    //            Id = 3,
+    //            Size = "Small",
+    //            Color = "Black"
+    //        }
+    //    }
+    //};
 
     [RelayCommand]
     public async Task Refresh()
@@ -34,12 +81,12 @@ public partial class CartViewModel : BaseViewModel
         try
         {
             IsBusy = true;
+            CartProducts.Clear();
 
             var cart = await _core.GetCartProductsAsync("test");
             if (cart != null)
             {
                 CartProducts.Clear();
-
                 foreach (var product in cart.Items)
                 {
                     CartProducts.Add(new CartProductOM
@@ -48,7 +95,9 @@ public partial class CartViewModel : BaseViewModel
                         BasePrice = product.Price,
                         Count = product.Quantity,
                         Discount = 0,
-                        TotalPrice = product.Price * product.Quantity - 0,
+                        TotalPrice = product.Price * product.Quantity,
+                        Color = product.Color,
+                        Size = product.Size,
                     });
                 }
             }
@@ -64,18 +113,59 @@ public partial class CartViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private void IncCount(CartProductOM product)
+    private async void IncCount(CartProductOM product)
     {
-        product.Count++;
-        product.TotalPrice = product.BasePrice * product.Count - product.Discount;
+        var cart = await _core.GetCartProductsAsync("test");
+
+        if (cart != null)
+        {
+            var item = cart.Items.FirstOrDefault(x => x.ProductName == product.Name);
+            if (item != null)
+            {
+                item.Quantity++;
+                item.Price += item.Price / (item.Quantity - 1);
+                cart.TotalPrice += item.Price / (item.Quantity + 1);
+            }
+        }
+
+        var response = await _core.AddToCart(new CreateCartRequest
+        {
+            Username = "test",
+            Items = cart.Items
+        });
+
+        if (response != null)
+        {
+            await Refresh();
+        }
     }
 
-
     [RelayCommand]
-    private void DecrCount(CartProductOM product)
+    private async void DecrCount(CartProductOM product)
     {
-        product.Count--;
-        product.TotalPrice = product.BasePrice * product.Count - product.Discount;
+        var cart = await _core.GetCartProductsAsync("test");
+
+        if (cart != null)
+        {
+            var item = cart.Items.FirstOrDefault(x => x.ProductName == product.Name);
+            if (item != null)
+            {
+                item.Quantity--;
+                item.Price -= item.Price / (item.Quantity + 1);
+                cart.TotalPrice -= item.Price / (item.Quantity + 1);
+            }
+        }
+
+        var response = await _core.AddToCart(new CreateCartRequest
+        {
+            Username = "test",
+            Items = cart.Items
+        });
+
+        if (response != null)
+        {
+            await Refresh();
+        }
     }
 
     //[RelayCommand]
@@ -103,7 +193,7 @@ public partial class CartViewModel : BaseViewModel
 
         var response = await _core.AddToCart(new CreateCartRequest
         {
-            Username = "test", 
+            Username = "test",
             Items = cart.Items
         });
 
@@ -112,4 +202,107 @@ public partial class CartViewModel : BaseViewModel
             await Refresh();
         }
     }
+
+
+    [RelayCommand]
+    private async Task CheckoutOrder()
+    {
+        try
+        {
+            var response = await _core.CheckoutOrder("test");
+
+            if (response)
+            {
+                await Refresh();
+                await Shell.Current.GoToAsync("/OrderPage");
+            }
+        }
+        catch (Exception ex)
+        {
+            await App.Current.MainPage.DisplayAlert("Error", ex.Message, "Ok");
+        }
+    }
+
+
+    [RelayCommand]
+    private async Task ClearCart()
+    {
+        try
+        {
+            var cart = await _core.GetCartProductsAsync("test");
+
+            if (cart != null)
+            {
+                cart.Items.Clear();
+            }
+
+            var response = await _core.AddToCart(new CreateCartRequest
+            {
+                Username = "test",
+                Items = cart.Items
+            });
+
+            if (response != null)
+            {
+                await Refresh();
+            }
+        }
+        catch (Exception ex)
+        {
+            await App.Current.MainPage.DisplayAlert("Error", ex.Message, "Ok");
+        }
+    }
+
+    [RelayCommand]
+    public async void ChangeSize(CartProductOM product)
+    {
+        var cart = await _core.GetCartProductsAsync("test");
+
+        if (cart != null)
+        {
+            var item = cart.Items.FirstOrDefault(x => x.ProductName == product.Name);
+            if (item != null)
+            {
+                item.Size = product.Size;
+            }
+        }
+
+        //var response = await _core.AddToCart(new CreateCartRequest
+        //{
+        //    Username = "test",
+        //    Items = cart.Items
+        //});
+
+        if (true)
+        {
+            await Refresh();
+        }
+    }
+
+    [RelayCommand]
+    public async void ChangeColor(CartProductOM product)
+    {
+        var cart = await _core.GetCartProductsAsync("test");
+
+        if (cart != null)
+        {
+            var item = cart.Items.FirstOrDefault(x => x.ProductName == product.Name);
+            if (item != null)
+            {
+                item.Color = product.Color;
+            }
+        }
+
+        //var response = await _core.AddToCart(new CreateCartRequest
+        //{
+        //    Username = "test",
+        //    Items = cart.Items
+        //});
+
+        if (true)
+        {
+            await Refresh();
+        }
+    }
+
 }

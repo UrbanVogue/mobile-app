@@ -18,7 +18,29 @@ namespace UrbanVogue.Models.Core
         public Core()
         {
             AppSettings = new AppSettings();
-        }
+        }        
+
+        public static List<CartProduct> response = new List<CartProduct>
+            {
+                new CartProduct
+                {
+                    ProductId = 1,
+                    ProductName = "Кепка",
+                    Price = 50000,
+                    Color = "Black",
+                    Size = "Large",
+                    Quantity = 2
+                },
+                new CartProduct
+                {
+                    ProductId = 2,
+                    ProductName = "Джинси",
+                    Price = 230000,
+                    Color = "Black",
+                    Size = "Small",
+                    Quantity = 1
+                }
+            };
 
         public async Task<List<CatalogProduct>> GetProducts()
         {
@@ -51,26 +73,65 @@ namespace UrbanVogue.Models.Core
 
         public async Task<CartResponse> GetCartProductsAsync(string username)
         {
-            var res = await RestApi.GetAsync<CartResponse>(new Uri($"http://172.21.224.1:7777/api/v1/basket"), username);
+            try
+            {
+                var res = await RestApi.GetAsync<CartResponse>(new Uri($"http://192.168.0.108:7777/api/v1/basket"), username);
+                return res;
 
-            //var response = new List<CartProductResponse>
-            //{
-            //    new CartProductResponse
-            //    {
-            //        Name = "Кепка",
-            //        BasePrice = 50000,
-            //        Discount = 15,
-            //        Count = 2,
-            //    },
-            //    new CartProductResponse
-            //    {
-            //        Name = "Джинси",
-            //        BasePrice = 230000,
-            //        Discount = 0,
-            //        Count = 1,
-            //    }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
 
-            //};           
+        public async Task<List<Order>> GetOrderHistoryAsync(string username)
+        {
+            //var res = await RestApi.GetAsync<Order>(new Uri($""), username);
+
+            var res = new List<Order>
+            {
+                new Order
+                {
+                    Id = 534,
+                    UserName = "Pena",
+                    TotalPrice = 330000,
+                    FirstName = "Penadate",
+                    LastName = "1234",
+                    EmailAddress = "email@gmail.com",
+                    AddressLine = "Some address",
+                    Country = "UA",
+                    State = "Оплачено",
+                    ZipCode = "123124123",
+                    CardName = "P24",
+                    CardNumber = "1234567891233471",
+                    Expiration = "14/25",
+                    CVV = "123",
+                    PaymentMethod = false,
+                    Date = new DateTime(2023, 11, 28),
+                    Items = response
+                },
+                new Order
+                {
+                    Id = 535,
+                    UserName = "Pena",
+                    TotalPrice = 330000,
+                    FirstName = "Penadate",
+                    LastName = "1234",
+                    EmailAddress = "email@gmail.com",
+                    AddressLine = "Some address",
+                    Country = "UA",
+                    State = "Оплачено",
+                    ZipCode = "123124123",
+                    CardName = "P24",
+                    CardNumber = "1234567891233471",
+                    Expiration = "14/25",
+                    CVV = "123",
+                    PaymentMethod = false,
+                    Date = new DateTime(2023, 12, 4),
+                    Items = response
+                }
+            };
 
             return res;
         }
@@ -79,7 +140,7 @@ namespace UrbanVogue.Models.Core
         {
             try
             {
-                var res = await RestApi.PostAsync<CartResponse>(new Uri("http://172.21.224.1:7777/api/v1/basket"), request);
+                var res = await RestApi.PostAsync<CartResponse>(new Uri("http://192.168.0.108:7777/api/v1/basket"), request);
 
                 return res;
             }
@@ -89,6 +150,19 @@ namespace UrbanVogue.Models.Core
             }
         }
 
+        public async Task<bool> CheckoutOrder(string username)
+        {
+            try
+            {
+                var res = await RestApi.PostQueryAsync<CartResponse>(new Uri("http://192.168.0.108:7777/api/v1/basket/checkout"), username);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
 
         public async Task<object> AuthenticateAsync()
         {
@@ -137,6 +211,22 @@ namespace UrbanVogue.Models.Core
             }
         }
 
+        public bool Logout()
+        {
+            try
+            {
+                AppSettings.AuthResponse = null;
+                AppSettings.ClaimsResponse = null;
+                AppSettings.Token = null;
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
         private Header GetAuthHeader()
         {
             var header = new Header
@@ -176,14 +266,12 @@ namespace UrbanVogue.Models.Core
 
         }
 
-
         public Uri GetUri(EnumMethod method)
         {
             string path = Path.Combine(AppSettings.API_URI, CommandToName(method));
             var uri = new Uri(path);
             return uri;
         }
-
 
         public static string CommandToName(EnumMethod method) => method switch
         {
@@ -209,9 +297,7 @@ namespace UrbanVogue.Models.Core
                      default:
                          throw new NoInternetException();
                     */
-
             }
-
         }
     }
 }

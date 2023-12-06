@@ -7,17 +7,14 @@
 			 x:DataType="vm:CartViewModel"
              Shell.ForegroundColor="Black"
              Title="Cart"
-             Shell.TitleColor="Black">  
+             Shell.TitleColor="Black">
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="bin.png" Command="{Binding ClearCartCommand}" />
+    </ContentPage.ToolbarItems>
     <Grid CompressedLayout.IsHeadless="True"
           BackgroundColor="White"
           RowDefinitions="0.05*,0.95*">
-        <!--<Label Text="Кошик"
-               FontSize="14"
-               FontAttributes="Bold"
-               HorizontalOptions="Center"
-               VerticalOptions="Center"
-               Margin="10,0,10,0"/>-->
         <RefreshView Command="{Binding RefreshCommand}"
                      HorizontalOptions="Center"
                      IsVisible="True"
@@ -54,12 +51,13 @@
                                        TextColor="Black"
                                        HorizontalOptions="Start"
                                        VerticalOptions="Center" />
-                                
+
                                 <HorizontalStackLayout Grid.Column="1"
                                                        Spacing="5"
                                                        HorizontalOptions="End"
                                                        VerticalOptions="Center">
-                                    <ImageButton Source="minus.svg"
+                                    <ImageButton Source=
+                                                 "minus.svg"
                                                  WidthRequest="15"
                                                  HeightRequest="15"    
                                                  BorderColor="Black"
@@ -69,10 +67,11 @@
                                                  Command="{Binding Source={RelativeSource
                                                            AncestorType={x:Type vm:CartViewModel}}, Path=DecrCountCommand}"
                                                  CommandParameter="{Binding .}"/>
+
                                     <Label Text="{Binding Count, Mode=TwoWay}"
                                            FontSize="16"                                           
                                            TextColor="Black"
-                                           />                                    
+                                           />
                                     <ImageButton Source="plus.svg"
                                                  WidthRequest="15"
                                                  HeightRequest="15"
@@ -82,7 +81,7 @@
                                                            AncestorType={x:Type vm:CartViewModel}}, Path=IncCountCommand}"
                                                  CommandParameter="{Binding .}"/>
                                 </HorizontalStackLayout>
-                                
+
                                 <Label Grid.Column="2"
                                        Text="{Binding TotalPrice, StringFormat='{0} UAH', Mode=TwoWay}"
                                        FontSize="14"
@@ -91,7 +90,7 @@
                                        HorizontalTextAlignment="Center"
                                        HorizontalOptions="Center"
                                        VerticalOptions="Center" />
-                                
+
                                 <ImageButton Grid.Column="3"
                                              Source="delete.svg"
                                              WidthRequest="20"
@@ -106,5 +105,16 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </RefreshView>
+
+        <Button Grid.Row="1"
+                Margin="10"
+                VerticalOptions="End"
+                WidthRequest="350"
+                HeightRequest="40"
+                TextColor="White"
+                ImageSource="cartwhite.svg"
+                BackgroundColor="{x:StaticResource Secondary}"
+                Text="Order"
+                Command="{Binding CheckoutOrderCommand}" />
     </Grid>
 </ContentPage>

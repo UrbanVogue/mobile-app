@@ -8,8 +8,7 @@
         public decimal TotalPrice { get; set; }
         public decimal Discount { get; set; }
         public int Count { get; set; }
-
-
-
+        public string Color { get; set; }
+        public string Size { get; set; }        
     }
 }

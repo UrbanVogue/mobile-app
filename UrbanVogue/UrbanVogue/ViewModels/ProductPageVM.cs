@@ -3,6 +3,7 @@ using UrbanVogue.Models.Core;
 using UrbanVogue.Models.ObservableModels;
 using UrbanVogue.Models.Request;
 using UrbanVogue.Models.Response;
+using ProductItem = UrbanVogue.Models.ObservableModels.ProductItem;
 
 namespace UrbanVogue.ViewModels
 {
@@ -48,71 +49,91 @@ namespace UrbanVogue.ViewModels
                 BasePrice = product.BasePrice,
                 DiscountPrice = product.DiscountPrice,
                 Images = product.Images.ConvertAll(x => $"data:image/png;base64,{x.Data}"),
-                Rating = product.Rating
+                Rating = product.Rating,
+                ProductItems = product.ProductItems.ConvertAll(x => new ProductItem
+                {
+                    Id = x.Id,
+                    Color = x.Color,
+                    Size = x.Size
+                })
             };
         }
 
-       
+
 
         [RelayCommand]
         private async Task AddToCart()
         {
-            var cart = await _core.GetCartProductsAsync("test");
-
-            CartResponse response = null;
-
-            if (cart != null)
+            try
             {
-                if(cart.Items.Any(x => x.ProductId == Product.Id))
+                if (_core.AppSettings.AuthResponse is null)
                 {
-                    cart.Items.First(x => x.ProductId == Product.Id).Quantity++;
-                }
-                else
-                {
-                    cart.Items.Add(new CartProduct
-                    {
-                        ProductId = Product.Id,
-                        ProductName = Product.Name,
-                        Quantity = 1,
-                        Price = Product.BasePrice,
-                        Color = "Black",
-                    });
+                    await Shell.Current.GoToAsync("//LoginPage");
+                    return;
                 }
 
-                response = await _core.AddToCart(new CreateCartRequest
-                {
-                    Username = "test", //_core.AppSettings.ClaimsResponse.PrefferedUsername,
-                    Items = cart.Items
-                });
+                var cart = await _core.GetCartProductsAsync("test");
 
-            }
-            else
-            {
+                CartResponse response = null;
 
-                response = await _core.AddToCart(new CreateCartRequest
+                if (cart != null)
                 {
-                    Username = "test", //_core.AppSettings.ClaimsResponse.PrefferedUsername,
-                    Items = new List<CartProduct>
+                    if (cart.Items.Any(x => x.ProductId == Product.Id))
                     {
-                        new CartProduct
+                        cart.Items.First(x => x.ProductId == Product.Id).Quantity++;
+                    }
+                    else
+                    {
+                        cart.Items.Add(new CartProduct
                         {
                             ProductId = Product.Id,
                             ProductName = Product.Name,
                             Quantity = 1,
                             Price = Product.BasePrice,
-                            Color = "Black",
-                        }
+                            Color = Product.ProductItems.First().Color,
+                            Size = Product.ProductItems.First().Size
+                        });
                     }
 
-                });
+                    response = await _core.AddToCart(new CreateCartRequest
+                    {
+                        Username = "test", //_core.AppSettings.ClaimsResponse.PrefferedUsername,
+                        Items = cart.Items
+                    });
+
+                }
+                else
+                {
+
+                    response = await _core.AddToCart(new CreateCartRequest
+                    {
+                        Username = "test", //_core.AppSettings.ClaimsResponse.PrefferedUsername,
+                        Items = new List<CartProduct>
+                        {
+                            new CartProduct
+                            {
+                                ProductId = Product.Id,
+                                ProductName = Product.Name,
+                                Quantity = 1,
+                                Price = Product.BasePrice,
+                                Color = Product.ProductItems.First().Color,
+                                Size = Product.ProductItems.First().Size
+                            }
+                        }
+
+                    });
+                }
+
+                if (response == null)
+                {
+
+                    await App.Current.MainPage.DisplayAlert("Info", "Product was not added to cart", "Ok");
+
+                }
             }
-
-            if (response == null)
+            catch (Exception ex)
             {
-                //Show dialog
-
-                await App.Current.MainPage.DisplayAlert("Info", "Product was not added to cart", "Ok");
-
+                await App.Current.MainPage.DisplayAlert("Error", ex.Message, "Ok");
             }
         }
 
