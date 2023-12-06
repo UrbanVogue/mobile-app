@@ -2,9 +2,15 @@
 
 public partial class OrderPage : ContentPage
 {
-	public OrderPage(OrderViewModel viewModel)
+    private OrderViewModel _vm;
+    public OrderPage(OrderViewModel viewModel)
 	{
 		InitializeComponent();
 		BindingContext = viewModel;
-	}
+        _vm = viewModel;
+    }
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        await _vm.InitAsync();
+    }
 }

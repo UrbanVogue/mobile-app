@@ -20,27 +20,27 @@ namespace UrbanVogue.Models.Core
             AppSettings = new AppSettings();
         }
 
-        //public static List<CartProduct> response = new List<CartProduct>
-        //    {
-        //        new CartProduct
-        //        {
-        //            ProductId = 1,
-        //            ProductName = "Кепка",
-        //            Price = 50000,
-        //            Color = "Black",
-        //            Size = "Large",
-        //            Quantity = 2
-        //        },
-        //        new CartProduct
-        //        {
-        //            ProductId = 2,
-        //            ProductName = "Джинси",
-        //            Price = 230000,
-        //            Color = "Black",
-        //            Size = "Small",
-        //            Quantity = 1
-        //        }
-        //    };
+        public static List<CartProduct> response = new List<CartProduct>
+            {
+                new CartProduct
+                {
+                    ProductId = 1,
+                    ProductName = "Кепка",
+                    Price = 50000,
+                    Color = "Black",
+                    Size = "Large",
+                    Quantity = 2
+                },
+                new CartProduct
+                {
+                    ProductId = 2,
+                    ProductName = "Джинси",
+                    Price = 230000,
+                    Color = "Black",
+                    Size = "Small",
+                    Quantity = 1
+                }
+            };
 
         public async Task<List<CatalogProduct>> GetProducts()
         {
@@ -82,6 +82,57 @@ namespace UrbanVogue.Models.Core
             //    Items = response,
             //    TotalPrice = 330000,
             //};
+
+            return res;
+        }
+
+        public async Task<List<Order>> GetOrderHistoryAsync(string username)
+        {
+            //var res = await RestApi.GetAsync<Order>(new Uri($""), username);
+
+            var res = new List<Order>
+            {
+                new Order
+                {
+                    Id = 534,
+                    UserName = "Pena",
+                    TotalPrice = 330000,
+                    FirstName = "Penadate",
+                    LastName = "1234",
+                    EmailAddress = "email@gmail.com",
+                    AddressLine = "Some address",
+                    Country = "UA",
+                    State = "Оплачено",
+                    ZipCode = "123124123",
+                    CardName = "P24",
+                    CardNumber = "1234567891233471",
+                    Expiration = "14/25",
+                    CVV = "123",
+                    PaymentMethod = false,
+                    Date = new DateTime(2023, 11, 28),
+                    Items = response
+                },
+                new Order
+                {
+                    Id = 535,
+                    UserName = "Pena",
+                    TotalPrice = 330000,
+                    FirstName = "Penadate",
+                    LastName = "1234",
+                    EmailAddress = "email@gmail.com",
+                    AddressLine = "Some address",
+                    Country = "UA",
+                    State = "Оплачено",
+                    ZipCode = "123124123",
+                    CardName = "P24",
+                    CardNumber = "1234567891233471",
+                    Expiration = "14/25",
+                    CVV = "123",
+                    PaymentMethod = false,
+                    Date = new DateTime(2023, 12, 4),
+                    Items = response
+                }
+            };
 
             return res;
         }
@@ -217,9 +268,7 @@ namespace UrbanVogue.Models.Core
                      default:
                          throw new NoInternetException();
                     */
-
             }
-
         }
     }
 }
