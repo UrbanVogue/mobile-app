@@ -54,6 +54,7 @@ namespace UrbanVogue.ViewModels
                 {
                     Id = x.Id,
                     Color = x.Color,
+                    ColorHash = Color.FromArgb(x.ColorCode),
                     Size = x.Size
                 })
             };

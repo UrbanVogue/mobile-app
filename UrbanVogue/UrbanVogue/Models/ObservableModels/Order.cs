@@ -36,7 +36,7 @@ namespace UrbanVogue.Models.ObservableModels
         public bool PaymentMethod { get; set; }
         [JsonProperty("items")]
         public List<CartProduct> Items { get; set; }
-        [JsonProperty("date")]
+        [JsonProperty("createdDate")]
         public DateTime Date { get; set; }
     }
 }

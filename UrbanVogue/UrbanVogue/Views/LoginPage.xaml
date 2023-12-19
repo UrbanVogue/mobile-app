@@ -4,7 +4,11 @@
 			 xmlns:vm="clr-namespace:UrbanVogue.ViewModels"
              xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
 			 x:Class="UrbanVogue.Views.LoginPage"
-			 x:DataType="vm:LoginViewModel">
+			 x:DataType="vm:LoginViewModel"
+             NavigationPage.HasNavigationBar="False"
+             NavigationPage.HasBackButton="False"
+             Shell.NavBarIsVisible="False"
+             >
     <Grid>
         <VerticalStackLayout VerticalOptions="Center"
                              Spacing="20"

@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:UrbanVogue.ViewModels"
+             xmlns:om="clr-namespace:UrbanVogue.Models.ObservableModels"
              xmlns:controls="clr-namespace:UrbanVogue.Views.Controls"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="UrbanVogue.Views.ProductPage"
@@ -41,14 +42,15 @@
                     </CarouselView.ItemTemplate>
 
                 </CarouselView>
-                
+
                 <Label Grid.Row="1"
                        HorizontalOptions="Fill"
                        VerticalOptions="Fill"
                        BackgroundColor="{x:StaticResource Secondary}"/>
-                
+
                 <Grid Grid.Row="2"
                       Margin="10"
+                      RowDefinitions="0.2*,0.2*,0.6*"
                       ColumnDefinitions="0.5*,0.5*"
                       CompressedLayout.IsHeadless="True">
                     <Label Text="{Binding Product.Name}"
@@ -62,6 +64,38 @@
                            HorizontalOptions="End"
                            HorizontalTextAlignment="End" />
 
+
+                    <CollectionView Grid.Row="1"
+                                    ItemsSource="{Binding Product.ProductItems}"
+                                    ItemsLayout="HorizontalList">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="om:ProductItemOM">
+                                <Grid Padding="0"
+                                      Margin="0,0,7,0"
+                                      CompressedLayout.IsHeadless="True">
+                                    <BoxView Color="{Binding ColorHash}"
+                                             WidthRequest="30"
+                                             HeightRequest="30"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <CollectionView Grid.Row="2"
+                ItemsSource="{Binding Product.ProductItems}"
+                ItemsLayout="HorizontalList">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="om:ProductItemOM">
+                                <Grid Padding="0"
+                                      Margin="0,0,7,0"
+                                      CompressedLayout.IsHeadless="True">
+                                    <Label Text="{Binding Size}"
+                                           FontSize="16"
+                                           FontAttributes="Bold"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
                 </Grid>
             </Grid>
         </ScrollView>

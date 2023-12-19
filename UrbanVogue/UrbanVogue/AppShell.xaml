@@ -29,14 +29,13 @@
 	<ShellContent
 		Shell.NavBarIsVisible="true"
 		Title="Order"
-		Icon="iconlottie.png"
+		Icon="order.png"
 		ContentTemplate="{DataTemplate views:OrderPage}"
 		Route="OrderPage" />
     
 	<ShellContent
 		Shell.NavBarIsVisible="true"
-		Title="Profile"
-		Icon="iconblank.png"
+		Title="Profile"		
 		ContentTemplate="{DataTemplate views:ProfilePage}"
 		Route="ProfilePage" />
 

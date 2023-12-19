@@ -214,7 +214,7 @@ public partial class CartViewModel : BaseViewModel
             if (response)
             {
                 await Refresh();
-                await Shell.Current.GoToAsync("/OrderPage");
+                await Shell.Current.GoToAsync("//OrderPage");
             }
         }
         catch (Exception ex)
